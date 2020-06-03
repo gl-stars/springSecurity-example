@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <artifactId>springSecurity-example</artifactId>
+        <groupId>com.sse</groupId>
+        <version>1.0-SNAPSHOT</version>
+    </parent>
+    <artifactId>sse-security-web</artifactId>
+
+    <dependencies>
+        <dependency>
+            <groupId>com.sse</groupId>
+            <artifactId>sse-security-core</artifactId>
+        </dependency>
+        <!-- web启动器, 对springmvc, servlet等支持 -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-web</artifactId>
+        </dependency>
+        <!--热部署 ctrl+f9-->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-devtools</artifactId>
+        </dependency>
+    </dependencies>
+
+</project>
