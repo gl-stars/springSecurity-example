@@ -16,7 +16,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 public class PasswordEncoderConfig {
     @Bean
     public PasswordEncoder passwordEncoder() {
-        // 明文+随机盐值》加密存储
+        // 明文+随机盐值加密存储
         return new BCryptPasswordEncoder();
     }
 }
