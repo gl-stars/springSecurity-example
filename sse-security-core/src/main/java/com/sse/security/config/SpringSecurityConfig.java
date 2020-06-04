@@ -86,14 +86,14 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
                 // 密码字段，默认的是 password
                 .passwordParameter(properties.getAuthentication().getPasswordParameter())
                 // 认证成功处理类
-                .successHandler(successHandler)
+//                .successHandler(successHandler)
                 // 认证失败处理类
-                .failureHandler(failureHandler)
+//                .failureHandler(failureHandler)
                 .and()
                 // 认证请求
                 .authorizeRequests()
                 // 放行的地址，设置 login/page地址不登录也可以访问
-//                .antMatchers(properties.getAuthentication().getLoginPage()).permitAll()
+                .antMatchers(properties.getAuthentication().getLoginPage()).permitAll()
                 // 所有访问该应用的http请求都要通过身份认证才可以访问
                 .anyRequest().authenticated()
         ; // 注意不要少了分号

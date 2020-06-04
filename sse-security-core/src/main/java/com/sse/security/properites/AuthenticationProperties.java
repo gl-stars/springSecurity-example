@@ -11,7 +11,7 @@ import lombok.Setter;
 @Getter
 @Setter
 public class AuthenticationProperties {
-    private String loginPage = "/login/page";
+    private String[] loginPage = {"/login/page"};
     private String loginProcessingUrl = "/login/form";
     private String usernameParameter = "name";
     private String passwordParameter = "pwd";
