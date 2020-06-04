@@ -1,5 +1,8 @@
 package com.sse.security.config;
 
+import com.sse.security.authentication.CustomAuthenticationFailureHandler;
+import com.sse.security.authentication.CustomAuthenticationSuccessHandler;
+import com.sse.security.properites.SecurityProperties;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
@@ -20,6 +23,24 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 @Configuration
 @EnableWebSecurity
 public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
+
+    /**
+     * 认证成功处理类
+     */
+    @Autowired
+    private CustomAuthenticationSuccessHandler successHandler ;
+
+    /**
+     * 认证失败处理类
+     */
+    @Autowired
+    private CustomAuthenticationFailureHandler failureHandler ;
+
+    /**
+     * 注入配置类信息
+     */
+    @Autowired
+    private SecurityProperties properties ;
 
     /**
      * 密码加密
@@ -58,16 +79,21 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         // 表单登录方式
         http.formLogin()
-                // 指定登录地址
-//                .loginPage("/login/page")
-                .usernameParameter("name")
-                .passwordParameter("pwd")
+                // 指定登录地址，默认为：/login
+//                .loginPage(properties.getAuthentication().getLoginPage())
+                // 用户名字段，默认的是 username
+                .usernameParameter(properties.getAuthentication().getUsernameParameter())
+                // 密码字段，默认的是 password
+                .passwordParameter(properties.getAuthentication().getPasswordParameter())
+                // 认证成功处理类
+                .successHandler(successHandler)
+                // 认证失败处理类
+                .failureHandler(failureHandler)
                 .and()
                 // 认证请求
                 .authorizeRequests()
-
-                // 设置 login/page地址不登录也可以访问
-//                .antMatchers("/login/page").permitAll()
+                // 放行的地址，设置 login/page地址不登录也可以访问
+//                .antMatchers(properties.getAuthentication().getLoginPage()).permitAll()
                 // 所有访问该应用的http请求都要通过身份认证才可以访问
                 .anyRequest().authenticated()
         ; // 注意不要少了分号
@@ -79,6 +105,6 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
      */
     @Override
     public void configure(WebSecurity web){
-        web.ignoring().antMatchers("/dist/**", "/modules/**", "/plugins/**");
+        web.ignoring().antMatchers(properties.getAuthentication().getStaticPaths());
     }
 }
