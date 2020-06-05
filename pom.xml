@@ -8,17 +8,16 @@
     <packaging>pom</packaging>
     <version>1.0-SNAPSHOT</version>
     <modules>
-        <!--基础通用功能-->
-        <module>sse-security-base</module>
-        <!--安全管理-->
-        <module>sse-security-core</module>
-        <!--web工程-->
-        <module>sse-security-web</module>
-        <module>sse-doc</module>
+        <!--工具类和日志配置-->
+        <module>sse-cloud-oauth2-base</module>
+        <!--建认证服务器-->
+        <module>sse-cloud-oauth2-auth-server</module>
     </modules>
+
     <properties>
         <spring-boot-dependencies.version>2.1.9.RELEASE</spring-boot-dependencies.version>
         <spring-boot-maven-plugin.version>2.1.1.RELEASE</spring-boot-maven-plugin.version>
+        <spring-cloud-dependencies.version>Greenwich.SR3</spring-cloud-dependencies.version>
         <mybatis-plus.version>3.2.0</mybatis-plus.version>
         <druid.version>1.1.12</druid.version>
         <captcha.version>1.6.2</captcha.version>
@@ -43,6 +42,16 @@
             <version>${commons-collections4.version}</version>
         </dependency>
         <!--工具包-->
+        <dependency>
+            <groupId>commons-collections</groupId>
+            <artifactId>commons-collections</artifactId>
+            <version>${commons-collections.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>commons-io</groupId>
+            <artifactId>commons-io</artifactId>
+            <version>${commons-io.version}</version>
+        </dependency>
         <dependency>
             <groupId>commons-beanutils</groupId>
             <artifactId>commons-beanutils</artifactId>
@@ -73,17 +82,20 @@
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
-            <!--自定义工程-->
+            <dependency>
+                <groupId>org.springframework.cloud</groupId>
+                <artifactId>spring-cloud-dependencies</artifactId>
+                <version>${spring-cloud-dependencies.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+            <!--自定义类-->
             <dependency>
                 <groupId>com.sse</groupId>
-                <artifactId>sse-security-base</artifactId>
+                <artifactId>sse-cloud-oauth2-base</artifactId>
                 <version>${project.version}</version>
             </dependency>
-            <dependency>
-                <groupId>com.sse</groupId>
-                <artifactId>sse-security-core</artifactId>
-                <version>${project.version}</version>
-            </dependency>
+
             <!--mybatis-plus启动器-->
             <dependency>
                 <groupId>com.baomidou</groupId>
@@ -108,11 +120,6 @@
                 <groupId>com.github.whvcse</groupId>
                 <artifactId>easy-captcha</artifactId>
                 <version>${captcha.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>commons-collections</groupId>
-                <artifactId>commons-collections</artifactId>
-                <version>${commons-collections.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>

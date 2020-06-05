@@ -1,4 +1,4 @@
-package com.sse.security.config;
+package com.sse.oauth2.server.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -6,17 +6,15 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 /**
- * @version : 1.0.0
- * @description: 实例化密码类
  * @author: GL
  * @program: springSecurity-example
- * @create: 2020年 06月 03日 14:44
+ * @create: 2020年 06月 05日 10:54
  **/
 @Configuration
-public class PasswordEncoderConfig {
+public class PasswordEncoderBean {
+
     @Bean
     public PasswordEncoder passwordEncoder() {
-        // 明文+随机盐值加密存储
         return new BCryptPasswordEncoder();
     }
 }
