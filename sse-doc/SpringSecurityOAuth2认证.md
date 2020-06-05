@@ -237,3 +237,45 @@ http://localhost:8090/auth/oauth/authorize?client_id=sse-pc&response_type=code
 
 出现这样的局面，说明授权码回娘家休息去了，你要重新发送 `http://localhost:8090/auth/oauth/authorize?client_id=sse-pc&response_type=code`这个地址重新获取授权码，不要一直在重定向回来的那个地址一直刷新，结果发现授权码一直都是那样，因为你并没有重新获取授权码，这是一种很愚蠢的做法。
 
+![在这里插入图片描述](https://img-blog.csdnimg.cn/20200605221348671.png)
+
+当前版本号：`e8656486abd96ec334eb373389ef0d029d47218a`
+
+# 三、密码授权模式**(**password)
+
+密码模式`（Resource Owner Password Credentials Grant`）中 ，用户向客户端提供自己在服务提供商（认证服务器）上的用户名和密码，然后客户端通过用户提供的用户名和密码向服务提供商（认证服务器）获取令牌。如果用户名和密码遗漏，服务提供商（认证服务器）无法判断客户端提交的用户和密码是否盗取来的，那意味着令牌就可随时获取，数据被丢失。适用于产品都是企业内部的，用户名密码共享不要紧。如果是第三方这种不太适合，也适用手机APP提交用户名密码。
+
+## 3.1、配置密码模式
+
+在安全配置类 `SpringSecurityConfig` 重写 `authenticationManagerBean()`方法，将 `AuthenticationManager`到容器中。
+
+![在这里插入图片描述](https://img-blog.csdnimg.cn/20200605224405613.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzQxODUzNDQ3,size_16,color_FFFFFF,t_70)
+
+在认证服务器中`AuthorizationServerConfig`覆写 `configure(AuthorizationServerEndpointsConfigurer endpoints)`方法，将`AuthenticationManager`认证管理器注入。
+
+![在这里插入图片描述](https://img-blog.csdnimg.cn/20200605224959774.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzQxODUzNDQ3,size_16,color_FFFFFF,t_70)
+
+授权类型就不用管了，这里已经设置好了，可以使用密码模式的。
+
+```java
+  // 授权类型, 可同时支持多种授权类型
+                .authorizedGrantTypes("authorization_code", "password",
+                        "implicit","client_credentials","refresh_token")
+```
+
+## 3.2、获取token
+
+获取的令牌端点也是一样的，都是`/oauth/token`。访问地址如下：
+
+```http
+http://localhost:8090/auth/oauth/token
+```
+
+![在这里插入图片描述](https://img-blog.csdnimg.cn/20200605225628358.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzQxODUzNDQ3,size_16,color_FFFFFF,t_70)
+
+![在这里插入图片描述](https://img-blog.csdnimg.cn/20200605225657110.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzQxODUzNDQ3,size_16,color_FFFFFF,t_70)
+
+![在这里插入图片描述](https://img-blog.csdnimg.cn/20200605225829524.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzQxODUzNDQ3,size_16,color_FFFFFF,t_70)
+
+<font  color="red">**注意要将grant_type更改为password**</font>
+
