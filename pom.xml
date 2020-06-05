@@ -14,6 +14,7 @@
         <module>sse-security-core</module>
         <!--web工程-->
         <module>sse-security-web</module>
+        <module>sse-doc</module>
     </modules>
     <properties>
         <spring-boot-dependencies.version>2.1.9.RELEASE</spring-boot-dependencies.version>
