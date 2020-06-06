@@ -183,7 +183,11 @@ OAuth 协议1.0版本过于复杂，目前发展到2.0版本，2.0版本已得�
 http://localhost:8090/auth/oauth/authorize?client_id=sse-pc&response_type=code
 ```
 
-> `client_id` 客户端id
+> 提交方式：`post`
+>
+> `client_id` 客户端`id`
+>
+> `response_type`：相应的类型是`code`授权码
 
 ![在这里插入图片描述](https://img-blog.csdnimg.cn/20200605214935968.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzQxODUzNDQ3,size_16,color_FFFFFF,t_70)
 
@@ -278,4 +282,80 @@ http://localhost:8090/auth/oauth/token
 ![在这里插入图片描述](https://img-blog.csdnimg.cn/20200605225829524.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzQxODUzNDQ3,size_16,color_FFFFFF,t_70)
 
 <font  color="red">**注意要将grant_type更改为password**</font>
+
+当前版本号：`7583d883ffd76f0cc95797498c854f0a1538f0f7`
+
+# 四、简化和客服端授权模式
+
+## 4.1、简化模式
+
+不通过第三方应用程序的服务器，直接在浏览器中向认证服务器申请令牌 ，不需要先获取授权码。直接可以一次请求就可得到令牌，在 `redirect_uri` 指定的回调地址中传递令牌（ `access_token` ）。该模式适合直接运行在浏览器上的应用，不用后端支持（例如 `Javascript` 应用） 。
+
+注意：只要客户端id即可 ，客户端密码都不需要。
+
+### 配置客户端授权类型
+
+实现简化模式需要在认证服务器 `AuthorizationServerConfig`的`authorizedGrantTypes`中配置授权类型为`implicit`，简化模式才可以生效。
+
+![在这里插入图片描述](https://img-blog.csdnimg.cn/20200606101300103.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzQxODUzNDQ3,size_16,color_FFFFFF,t_70)
+
+### 获取`token`
+
+获取`token`的令牌端点`/oauth/authorize` ，访问地址如下：
+
+```http
+http://localhost:8090/auth/oauth/authorize?client_id=sse-pc&response_type=token
+```
+
+> `auth`：服务器名称，在yml中自己配置的
+>
+> `client_id`：客服端id
+>
+> `response_type`：相应类型是`token`
+
+访问这个地址后，会跳转到登录页面进行登录。登录成功跳转到重定向的`URL`地址，后面就带上token了。
+
+![在这里插入图片描述](https://img-blog.csdnimg.cn/2020060610202266.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzQxODUzNDQ3,size_16,color_FFFFFF,t_70)
+
+![在这里插入图片描述](https://img-blog.csdnimg.cn/20200606102142890.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzQxODUzNDQ3,size_16,color_FFFFFF,t_70)
+
+![在这里插入图片描述](https://img-blog.csdnimg.cn/20200606102209631.png)
+
+```http
+https://www.baidu.com/
+#access_token=92d70c3f-2172-4a9e-9ba0-39428659e057
+&token_type=bearer
+&expires_in=43199
+&scope=all
+```
+
+> `access_token`：令牌
+>
+> `token_type`：令牌类型，返回都是这个值
+>
+> `expires_in`：令牌的时差，一般是12个小时
+>
+> `scope`：访问范围，在 `.scopes("all")`这里配置的。
+
+## 4.2、客户端模式
+
+客户端模式（Client Credentials Grant）指客户端以自己的名义，而不是以用户的名义，向服务提供商（认证服务器）进行认证。在这种模式中，用户直接向客户端注册，客户端以自己的名义要求服务提供商（认证服务器）提供服务，**其实不存在授权问题**。客户端向认证服务器进行身份认证，并要求一个访问令牌。认证服务器确认无误后，向客户端提供访问令牌。
+
+### 配置客服端授权类型
+
+在认证服务器中`AuthorizationServerConfig`通过`authorizedGrantTypes`指定客服端模式。
+
+![在这里插入图片描述](https://img-blog.csdnimg.cn/20200606103312216.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzQxODUzNDQ3,size_16,color_FFFFFF,t_70)
+
+### 获取token
+
+既然是以客服端为名义，而不是用户的名义去获取令牌。那么用户登录这个步骤就没有了，并且这个模式是没有刷新令牌的。使用的令牌端点`/oauth/token`，访问地址如下：
+
+```http
+http://localhost:8090/auth/oauth/token
+```
+
+![在这里插入图片描述](https://img-blog.csdnimg.cn/20200606104022877.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzQxODUzNDQ3,size_16,color_FFFFFF,t_70)
+
+![在这里插入图片描述](https://img-blog.csdnimg.cn/20200606104154255.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzQxODUzNDQ3,size_16,color_FFFFFF,t_70)
 
