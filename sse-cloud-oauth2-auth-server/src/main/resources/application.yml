@@ -7,9 +7,9 @@ server:
 spring:
   # 数据源配置
   datasource:
+    url: jdbc:mysql://www.it307.top:3306/security-oauth2?serverTimezone=GMT%2B8&useUnicode=true&characterEncoding=utf8
     username: root
-    password: root
-    url: jdbc:mysql://127.0.0.1:3306/study-security?serverTimezone=GMT%2B8&useUnicode=true&characterEncoding=utf8
+    password: mcpmysql
     #mysql8版本以上驱动包指定新的驱动类
     driver-class-name: com.mysql.cj.jdbc.Driver
     #   数据源其他配置, 在 DruidConfig配置类中手动绑定
