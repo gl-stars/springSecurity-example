@@ -2,6 +2,7 @@ package com.sse.oauth2.server.config;
 
 import com.sse.oauth2.service.CustomUserDetailsService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -9,7 +10,11 @@ import org.springframework.security.oauth2.config.annotation.configurers.ClientD
 import org.springframework.security.oauth2.config.annotation.web.configuration.AuthorizationServerConfigurerAdapter;
 import org.springframework.security.oauth2.config.annotation.web.configuration.EnableAuthorizationServer;
 import org.springframework.security.oauth2.config.annotation.web.configurers.AuthorizationServerEndpointsConfigurer;
+import org.springframework.security.oauth2.provider.code.AuthorizationCodeServices;
+import org.springframework.security.oauth2.provider.code.JdbcAuthorizationCodeServices;
 import org.springframework.security.oauth2.provider.token.TokenStore;
+
+import javax.sql.DataSource;
 
 /**
  *  认证服务器配置
@@ -47,6 +52,12 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
     private TokenStore tokenStore;
 
     /**
+     * 获取数据源
+     */
+    @Autowired
+    private DataSource dataSource;
+
+    /**
      * 配置被允许访问此认证服务器的客户端详情信息
      * 方式1：内存方式管理
      * 方式2：数据库管理
@@ -73,6 +84,15 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
     }
 
     /**
+     * 授权码管理策略
+     * @return
+     */
+    @Bean
+    public AuthorizationCodeServices jdbcAuthorizationCodeServices() {
+        // 注入数据源
+        return new JdbcAuthorizationCodeServices(dataSource);
+    }
+    /**
      * 关于认证服务器端点配置
      * @param endpoints
      * @throws Exception
@@ -85,5 +105,7 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
         endpoints.userDetailsService(customUserDetailsService);
         // 令牌的管理方式
         endpoints.tokenStore(tokenStore);
+        // 授权码管理策略
+        endpoints.authorizationCodeServices(jdbcAuthorizationCodeServices());
     }
 }
