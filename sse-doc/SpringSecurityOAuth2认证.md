@@ -1,5 +1,9 @@
 # SpringSecurityOAuth2认证
 
+[TOC]
+
+<font color="blue" size=4  face="verdana" >源码地址：</font>[https://github.com/gl-stars/springSecurity-example.git](https://github.com/gl-stars/springSecurity-example.git)
+
 # 一、OAuth2 协议四种授权方式
 
 ## 1.1、OAuth2 简单介绍
@@ -245,7 +249,7 @@ http://localhost:8090/auth/oauth/authorize?client_id=sse-pc&response_type=code
 
 当前版本号：`e8656486abd96ec334eb373389ef0d029d47218a`
 
-# 三、密码授权模式**(**password)
+# 三、密码授权模式(password)
 
 密码模式`（Resource Owner Password Credentials Grant`）中 ，用户向客户端提供自己在服务提供商（认证服务器）上的用户名和密码，然后客户端通过用户提供的用户名和密码向服务提供商（认证服务器）获取令牌。如果用户名和密码遗漏，服务提供商（认证服务器）无法判断客户端提交的用户和密码是否盗取来的，那意味着令牌就可随时获取，数据被丢失。适用于产品都是企业内部的，用户名密码共享不要紧。如果是第三方这种不太适合，也适用手机APP提交用户名密码。
 
@@ -359,3 +363,4 @@ http://localhost:8090/auth/oauth/token
 
 ![在这里插入图片描述](https://img-blog.csdnimg.cn/20200606104154255.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzQxODUzNDQ3,size_16,color_FFFFFF,t_70)
 
+当前版本号：`eeda16403ee90bf8fd76883cd189d66aa500b02f`

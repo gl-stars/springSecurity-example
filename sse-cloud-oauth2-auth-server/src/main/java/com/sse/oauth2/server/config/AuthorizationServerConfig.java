@@ -1,5 +1,6 @@
 package com.sse.oauth2.server.config;
 
+import com.sse.oauth2.service.CustomUserDetailsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -8,6 +9,7 @@ import org.springframework.security.oauth2.config.annotation.configurers.ClientD
 import org.springframework.security.oauth2.config.annotation.web.configuration.AuthorizationServerConfigurerAdapter;
 import org.springframework.security.oauth2.config.annotation.web.configuration.EnableAuthorizationServer;
 import org.springframework.security.oauth2.config.annotation.web.configurers.AuthorizationServerEndpointsConfigurer;
+import org.springframework.security.oauth2.provider.token.TokenStore;
 
 /**
  *  认证服务器配置
@@ -31,6 +33,18 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
      */
     @Autowired
     private AuthenticationManager authenticationManager;
+
+    /**
+     * 刷新令牌
+     */
+    @Autowired
+    private CustomUserDetailsService customUserDetailsService ;
+
+    /**
+     * token管理方式，在TokenConfig类中已对添加到容器中了
+     */
+    @Autowired
+    private TokenStore tokenStore;
 
     /**
      * 配置被允许访问此认证服务器的客户端详情信息
@@ -65,6 +79,11 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
      */
     @Override
     public void configure(AuthorizationServerEndpointsConfigurer endpoints) throws Exception {
+        // 密码模式需要设置认证管理器
         endpoints.authenticationManager(authenticationManager);
+        // 刷新令牌获取新令牌时需要
+        endpoints.userDetailsService(customUserDetailsService);
+        // 令牌的管理方式
+        endpoints.tokenStore(tokenStore);
     }
 }

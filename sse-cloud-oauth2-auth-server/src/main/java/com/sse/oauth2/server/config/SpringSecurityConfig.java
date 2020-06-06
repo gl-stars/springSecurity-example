@@ -1,5 +1,6 @@
 package com.sse.oauth2.server.config;
 
+import com.sse.oauth2.service.CustomUserDetailsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -21,6 +22,8 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
+    @Autowired
+    private CustomUserDetailsService customUserDetailsService;
     /**
      * 认证管理器：
      * 1、认证信息提供方式（用户名、密码、当前用户的资源权限）
@@ -31,8 +34,10 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
         // 内存方式存储用户信息
-        auth.inMemoryAuthentication().withUser("admin")
-                .password(passwordEncoder.encode("1234556")).authorities("product");
+//        auth.inMemoryAuthentication().withUser("admin")
+//                .password(passwordEncoder.encode("1234556")).authorities("product");
+        // 使用数据库查询的方式
+        auth.userDetailsService(customUserDetailsService);
     }
 
     /**

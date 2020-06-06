@@ -20,3 +20,7 @@ spring:
     timeBetweenEvictionRunsMillis: 60000
     minEvictableIdleTimeMillis: 300000
     validationQuery: SELECT 1 FROM DUAL
+  redis:
+    host: 106.54.136.81
+    port: 6379
+    timeout: 5000
