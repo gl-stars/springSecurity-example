@@ -26,4 +26,11 @@ public class SysUserServiceImpl extends ServiceImpl<SysUserMapper, SysUser> impl
         // baseMapper 对应的是就是 SysUserMapper
         return baseMapper.selectOne(queryWrapper);
     }
+    @Override
+    public SysUser findByMobile(String mobile) {
+        QueryWrapper<SysUser> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("mobile", mobile);
+        // baseMapper 对应的是 SysUserMapper 实例
+        return baseMapper.selectOne(queryWrapper);
+    }
 }

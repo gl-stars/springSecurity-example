@@ -1,6 +1,6 @@
 package com.sse.oauth2.server.config;
 
-import com.sse.oauth2.service.CustomUserDetailsService;
+import com.sse.oauth2.server.service.CustomUserDetailsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.security.authentication.AuthenticationManager;

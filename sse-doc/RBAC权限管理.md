@@ -703,3 +703,5 @@ public class SysPermissionServiceImpl extends ServiceImpl<SysPermissionMapper, S
 ### 编写测试类
 
 ![在这里插入图片描述](https://img-blog.csdnimg.cn/20200610122004625.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzQxODUzNDQ3,size_16,color_FFFFFF,t_70)
+
+当前版本号：`38a41a72a133e891e430e7b4977de6b30fa3b80f`
