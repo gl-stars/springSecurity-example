@@ -19,6 +19,9 @@ public class TestAuthApplication {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
+    /**
+     * 测试加密结果
+     */
     @Test
     public void testPwd() {
         // 指定数据获取加密后的结果
