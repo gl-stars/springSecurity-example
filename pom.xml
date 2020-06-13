@@ -12,6 +12,8 @@
         <module>sse-cloud-oauth2-base</module>
         <!--建认证服务器-->
         <module>sse-cloud-oauth2-auth-server</module>
+        <!--商品服务器（资源服务器）-->
+        <module>sse-cloud-oauth2-product</module>
     </modules>
 
     <properties>
