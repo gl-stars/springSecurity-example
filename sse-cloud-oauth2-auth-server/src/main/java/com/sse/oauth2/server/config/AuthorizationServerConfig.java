@@ -16,6 +16,7 @@ import org.springframework.security.oauth2.provider.client.JdbcClientDetailsServ
 import org.springframework.security.oauth2.provider.code.AuthorizationCodeServices;
 import org.springframework.security.oauth2.provider.code.JdbcAuthorizationCodeServices;
 import org.springframework.security.oauth2.provider.token.TokenStore;
+import org.springframework.security.oauth2.provider.token.store.JwtAccessTokenConverter;
 
 import javax.sql.DataSource;
 
@@ -59,6 +60,12 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
      */
     @Autowired
     private DataSource dataSource;
+
+    /**
+     * jwt转换器
+     */
+    @Autowired
+    private JwtAccessTokenConverter jwtAccessTokenConverter;
 
     /**
      *  创建jdbcClientDetailsService实例，并注入spring容器中，不要少了@Bean
@@ -159,8 +166,8 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
         endpoints.authenticationManager(authenticationManager);
         // 刷新令牌获取新令牌时需要
         endpoints.userDetailsService(customUserDetailsService);
-        // 令牌的管理方式
-        endpoints.tokenStore(tokenStore);
+        // 令牌的管理方式，并指定JWT转换器 accessTokenConverter
+        endpoints.tokenStore(tokenStore).accessTokenConverter(jwtAccessTokenConverter);
         // 授权码管理策略
         endpoints.authorizationCodeServices(jdbcAuthorizationCodeServices());
     }

@@ -238,3 +238,89 @@ http://localhost:8090/auth/oauth/token
 
 ![在这里插入图片描述](https://img-blog.csdnimg.cn/2020061314554553.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzQxODUzNDQ3,size_16,color_FFFFFF,t_70)
 
+
+
+# 三、认证服务器实现JWT对称加密
+
+生成`JWT`令牌需要签名，签名就使用对称加密来进行签名。对称加密就是加密和解密的秘钥都是同一个，也称为单秘钥加密。
+
+## 3.1、指定jwt管理令牌
+
+在`Token`管理工具`TokenConfig`中指定`JWT`管理令牌，并将访问令牌转换器注入容器中。
+
+![在这里插入图片描述](https://img-blog.csdnimg.cn/2020061320245155.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzQxODUzNDQ3,size_16,color_FFFFFF,t_70)
+
+## 3.2、认证服务器中指定jwt转换器
+
+在认证服务器`AuthorizationServerConfig`配置中，端点配置 `configure(AuthorizationServerEndpointsConfigurer endpoints)`里面指定`JWT`转换器。<font color="red">`jwt`转换器一定要注入容器，否则这里是获取不到实例的。我在jwt管理令牌中注入了，不要描述。</font>
+
+![在这里插入图片描述](https://img-blog.csdnimg.cn/20200613202627890.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzQxODUzNDQ3,size_16,color_FFFFFF,t_70)
+
+## 3.3、测试
+
+获取`token`
+
+![在这里插入图片描述](https://img-blog.csdnimg.cn/20200613203009183.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzQxODUzNDQ3,size_16,color_FFFFFF,t_70)
+
+![在这里插入图片描述](https://img-blog.csdnimg.cn/20200613203206762.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzQxODUzNDQ3,size_16,color_FFFFFF,t_70)
+
+
+
+# 四、资源服务器jwt对称加密
+
+## 4.1、创建token管理工具
+
+将令牌转换器`JwtAccessTokenConverter`和指定`token`管理方式`TokenStore`注入到容器中。
+
+在 `sse-cloud-oauth2-product`资源服务器中创建 `com.sse.oauth2.config.TokenConfig`类，代码如下：
+
+```java
+package com.sse.oauth2.config;
+
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.security.oauth2.provider.token.TokenStore;
+import org.springframework.security.oauth2.provider.token.store.JwtAccessTokenConverter;
+import org.springframework.security.oauth2.provider.token.store.JwtTokenStore;
+
+/**
+ * Token管理工具
+ * @author: GL
+ * @program: springSecurity-example
+ * @create: 2020年 06月 06日 15:01
+ **/
+@Configuration
+public class TokenConfig {
+
+    /**
+     * 访问令牌的转换器
+     * @return
+     */
+    @Bean
+    public JwtAccessTokenConverter jwtAccessTokenConverter() {
+        JwtAccessTokenConverter converter = new JwtAccessTokenConverter();
+        // 对称加密进行签名令牌，资源服务器也要采用此密钥来进行解密,来校验令牌合法性
+        converter.setSigningKey("abcdefg");
+        return converter;
+    }
+
+    /**
+     * 指定token管理方式
+     * @return
+     */
+    @Bean
+    public TokenStore tokenStore() {
+        // 指定jwt管理令牌
+        return new JwtTokenStore(jwtAccessTokenConverter());
+    }
+
+}
+```
+
+## 4.2、更改资源服务器相关配置
+
+更改资源服务器配置`ResourceServerConfig`，`tokenService()`配置文件就不需要了，因为`token`里面就带了相关数据了。但是必须在 `token`管理工具`TokenConfig`里面设置`token`管理方式和`token`转换器，并且注入容器中。
+
+![在这里插入图片描述](https://img-blog.csdnimg.cn/20200613205351968.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzQxODUzNDQ3,size_16,color_FFFFFF,t_70)
+
+![在这里插入图片描述](https://img-blog.csdnimg.cn/20200613205729485.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzQxODUzNDQ3,size_16,color_FFFFFF,t_70)
