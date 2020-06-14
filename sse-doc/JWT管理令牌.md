@@ -206,8 +206,6 @@ public class ResourceServerConfig extends ResourceServerConfigurerAdapter {
 
 ![在这里插入图片描述](https://img-blog.csdnimg.cn/20200613144248186.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzQxODUzNDQ3,size_16,color_FFFFFF,t_70)
 
-
-
 - 获取令牌
 
 我使用密码模式获取，为了简单呗。这里就大概提一下，详细步骤看“SpringSecurityOAuth2认证”这篇文章。
@@ -324,3 +322,33 @@ public class TokenConfig {
 ![在这里插入图片描述](https://img-blog.csdnimg.cn/20200613205351968.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzQxODUzNDQ3,size_16,color_FFFFFF,t_70)
 
 ![在这里插入图片描述](https://img-blog.csdnimg.cn/20200613205729485.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzQxODUzNDQ3,size_16,color_FFFFFF,t_70)
+
+# 五、认证和资源服务器非对称加密
+
+生成`JWT`的`RSA`非对称加密秘钥参考：[https://blog.csdn.net/qq_41853447/article/details/105748272](https://blog.csdn.net/qq_41853447/article/details/105748272)
+
+## 4.1、认证服务器实现非对称加密
+
+将生成的私钥放在认证服务器`sse-cloud-oauth2-auth-server`的`resources`目录下，并在token管理工具中配置令牌转换器。
+
+![在这里插入图片描述](https://img-blog.csdnimg.cn/20200614132332188.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzQxODUzNDQ3,size_16,color_FFFFFF,t_70)
+
+
+
+## 4.2、资源服务器实现非对称加密
+
+将公钥放在资源服务器 `sse-cloud-oauth2-product`的`resources`目录下，在`token`管理工具`TokenConfig`中设置`token`转换器。
+
+![在这里插入图片描述](https://img-blog.csdnimg.cn/20200614132638595.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzQxODUzNDQ3,size_16,color_FFFFFF,t_70)
+
+
+
+## 4.3、测试
+
+启动认证服务器获取token，然后在启动资源服务器使用刚获取到的token在访问资源。
+
+![在这里插入图片描述](https://img-blog.csdnimg.cn/2020061413283611.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzQxODUzNDQ3,size_16,color_FFFFFF,t_70)
+
+![在这里插入图片描述](https://img-blog.csdnimg.cn/20200614132908811.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzQxODUzNDQ3,size_16,color_FFFFFF,t_70)
+
+当前版本号：``
