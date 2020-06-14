@@ -238,6 +238,20 @@ http://localhost:8090/auth/oauth/token
 
 
 
+## 2.6、使用URL级别权限
+
+> 下面的代码和上面版本的代码添加一些，是因为我将jwt对称加密和非对称加密都写完了，最后我又来添加这个环境的。但是jwt非对称加密这种方式有些时候可以，有些时候回加载不到私钥，后期需要做一下更改，这里我就同意使用jwt对称加密了。
+
+将前端控制器上的权限注解注释了，在资源服务器配置`ResourceServerConfig`中添加 `configure(HttpSecurity http)`方法配置。
+
+![在这里插入图片描述](https://img-blog.csdnimg.cn/20200614163938355.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzQxODUzNDQ3,size_16,color_FFFFFF,t_70)
+
+![在这里插入图片描述](https://img-blog.csdnimg.cn/20200614164027451.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzQxODUzNDQ3,size_16,color_FFFFFF,t_70)
+
+## 2.7、测试
+
+![在这里插入图片描述](https://img-blog.csdnimg.cn/20200614164142951.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzQxODUzNDQ3,size_16,color_FFFFFF,t_70)
+
 # 三、认证服务器实现JWT对称加密
 
 生成`JWT`令牌需要签名，签名就使用对称加密来进行签名。对称加密就是加密和解密的秘钥都是同一个，也称为单秘钥加密。
@@ -262,7 +276,7 @@ http://localhost:8090/auth/oauth/token
 
 ![在这里插入图片描述](https://img-blog.csdnimg.cn/20200613203206762.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L3FxXzQxODUzNDQ3,size_16,color_FFFFFF,t_70)
 
-
+当前版本号：``
 
 # 四、资源服务器jwt对称加密
 

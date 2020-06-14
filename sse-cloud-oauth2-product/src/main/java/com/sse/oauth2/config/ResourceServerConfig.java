@@ -3,6 +3,8 @@ package com.sse.oauth2.config;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
+import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.oauth2.config.annotation.web.configuration.EnableResourceServer;
 import org.springframework.security.oauth2.config.annotation.web.configuration.ResourceServerConfigurerAdapter;
 import org.springframework.security.oauth2.config.annotation.web.configurers.ResourceServerSecurityConfigurer;
@@ -61,4 +63,18 @@ public class ResourceServerConfig extends ResourceServerConfigurerAdapter {
         service.setClientSecret("123456");
         return service;
     }*/
+
+    @Override
+    public void configure(HttpSecurity http) throws Exception {
+        http.sessionManagement()
+                // SpringSecurity不会使用也不会创建HttpSession实例
+                .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+                .and()
+                .authorizeRequests()
+                // 授权规则配置
+                .antMatchers("/product/*").hasAuthority("sys:user:list")
+                // 所有请求，都需要有all范围（scope）
+//                .antMatchers("/**").access("#oauth2.hasScope('all')")
+        ;
+    }
 }
