@@ -24,7 +24,7 @@
         <druid.version>1.1.12</druid.version>
         <captcha.version>1.6.2</captcha.version>
         <oauth2-autoconfigure.version>2.1.2.RELEASE</oauth2-autoconfigure.version>
-        <fastjson.version>1.2.8</fastjson.version>
+        <fastjson.version>1.2.83</fastjson.version>
         <commons-lang.version>2.6</commons-lang.version>
         <commons-collections.version>3.2.2</commons-collections.version>
         <commons-io.version>2.6</commons-io.version>
